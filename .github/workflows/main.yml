@@ -23,19 +23,14 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y build-essential libssl-dev zlib1g-dev libdb5.3-dev \
           libexpat1-dev libffi-dev libgdbm-dev liblzma-dev libncurses5-dev \
-          libreadline-dev libsqlite3-dev libssl-dev libbz2-dev uuid-dev
+          libreadline-dev libsqlite3-dev libssl-dev libbz2-dev uuid-dev openjdk-17-jdk
 
-    - name: Find and Link AIDL Automatically
+    - name: Pre-accept Android Licenses
       run: |
-        # Sistemdəki aidl faylını harada olursa olsun tapır və bura bağlayır
-        AIDL_PATH=$(find $ANDROID_HOME/build-tools -name aidl -type f | head -n 1)
-        if [ -n "$AIDL_PATH" ]; then
-          sudo ln -s "$AIDL_PATH" /usr/local/bin/aidl
-          echo "AIDL tapıldı və bağlandı: $AIDL_PATH"
-        else
-          echo "AIDL tapılmadı, standart alətlər quraşdırılır..."
-          sudo apt-get install -y aidl
-        fi
+        # Buildozer-in lisenziya tələbini gözləmədən bütün Google lisenziyalarını avtomatik təsdiqləyirik
+        mkdir -p ~/.android
+        touch ~/.android/repositories.cfg
+        yes | sdkmanager --licenses || true
 
     - name: Install Buildozer and Cython
       run: |
@@ -44,9 +39,11 @@ jobs:
 
     - name: Build with Buildozer
       run: |
-        buildozer android debug
+        # Buildozer-ə əmr veririk ki, lisenziyaları avtomatik qəbul etsin
+        yes | buildozer android debug
       env:
         TERM: xterm
+        AUTO_ACCEPT_LICENSE: "1"
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
