@@ -1,0 +1,155 @@
+# kv_styles.kv
+
+<SplashScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        canvas.before:
+            Color:
+                rgba: 0.1, 0.1, 0.15, 1  # Tünd göy/qara fon
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        
+        Label:
+            text: "ZR4X GAMES"
+            font_size: '40sp'
+            bold: True
+            color: 1, 1, 1, 1
+            halign: 'center'
+
+<MenuScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: [20, 40, 20, 40]
+        spacing: 15
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: "ŞAHMAT"
+            font_size: '36sp'
+            bold: True
+            color: 0.1, 0.1, 0.2, 1
+            size_hint_y: None
+            height: '60dp'
+
+        Button:
+            text: "İnsan vs İnsan (PvP)"
+            font_size: '18sp'
+            bold: True
+            size_hint_y: None
+            height: '50dp'
+            background_color: 0.2, 0.4, 0.8, 1
+            on_release: root.start_pvp()
+
+        Button:
+            text: "Robota Qarşı (PvE)"
+            font_size: '18sp'
+            bold: True
+            size_hint_y: None
+            height: '50dp'
+            background_color: 0.2, 0.6, 0.4, 1
+            on_release: root.show_difficulty_modes()
+
+        BoxLayout:
+            id: difficulty_box
+            orientation: 'vertical'
+            spacing: 5
+            size_hint_y: None
+            height: 0
+            opacity: 0
+            disabled: True
+            Button:
+                text: "Asan"
+                bold: True
+                background_color: 0.4, 0.7, 0.4, 1
+                on_release: root.start_pve(1)
+            Button:
+                text: "Orta"
+                bold: True
+                background_color: 0.8, 0.6, 0.2, 1
+                on_release: root.start_pve(2)
+            Button:
+                text: "Çətin"
+                bold: True
+                background_color: 0.8, 0.2, 0.2, 1
+                on_release: root.start_pve(3)
+
+        Button:
+            text: "Mat Tapmacaları"
+            font_size: '18sp'
+            bold: True
+            size_hint_y: None
+            height: '50dp'
+            background_color: 0.5, 0.3, 0.7, 1
+            on_release: root.go_to_puzzles()
+
+<PuzzleMenuScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 15
+        spacing: 10
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        BoxLayout:
+            size_hint_y: None
+            height: '50dp'
+            spacing: 10
+            Button:
+                text: "↩ Geri"
+                bold: True
+                size_hint_x: None
+                width: '80dp'
+                on_release: root.go_back()
+            Label:
+                text: "Şahmat Tapmacaları"
+                font_size: '20sp'
+                bold: True
+                color: 0, 0, 0, 1
+
+        Label:
+            text: "1 Gedişdə Mat"
+            bold: True
+            color: 0.2, 0.5, 0.2, 1
+            size_hint_y: None
+            height: '30dp'
+
+        GridLayout:
+            id: grid_1_move
+            cols: 5
+            spacing: 5
+            size_hint_y: None
+            height: '100dp'
+
+        Label:
+            text: "2 Gedişdə Mat"
+            bold: True
+            color: 0.7, 0.2, 0.2, 1
+            size_hint_y: None
+            height: '30dp'
+
+        GridLayout:
+            id: grid_2_move
+            cols: 5
+            spacing: 5
+            size_hint_y: None
+            height: '100dp'
+        
+        Widget: # Boşluq doldurmaq üçün
+
+<GameScreen>:
+    canvas.before:
+        Color:
+            rgba: 0.9, 0.9, 0.9, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
