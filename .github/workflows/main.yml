@@ -1,0 +1,29 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+
+    - name: Buildozer Action
+      uses: ArtemGovorov/buildozer-action@v1
+      with:
+        command: buildozer android debug
+        buildozer_version: stable
+
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: zr4xchess-apk
+        path: bin/*.apk
