@@ -25,10 +25,17 @@ jobs:
           libexpat1-dev libffi-dev libgdbm-dev liblzma-dev libncurses5-dev \
           libreadline-dev libsqlite3-dev libssl-dev libbz2-dev uuid-dev
 
-    - name: Link Android SDK AIDL to Path
+    - name: Find and Link AIDL Automatically
       run: |
-        # SDK daxilindəki aidl faylını tapıb sistemə rəsmən tanıdırıq
-        sudo ln -s $ANDROID_HOME/build-tools/34.0.0/aidl /usr/local/bin/aidl
+        # Sistemdəki aidl faylını harada olursa olsun tapır və bura bağlayır
+        AIDL_PATH=$(find $ANDROID_HOME/build-tools -name aidl -type f | head -n 1)
+        if [ -n "$AIDL_PATH" ]; then
+          sudo ln -s "$AIDL_PATH" /usr/local/bin/aidl
+          echo "AIDL tapıldı və bağlandı: $AIDL_PATH"
+        else
+          echo "AIDL tapılmadı, standart alətlər quraşdırılır..."
+          sudo apt-get install -y aidl
+        fi
 
     - name: Install Buildozer and Cython
       run: |
