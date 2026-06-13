@@ -7,23 +7,37 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v2
-
-    - name: Buildozer Action
-      uses: ArtemGovorov/buildozer-action@v1
+    - name: Set up Python
+      uses: actions/setup-python@v5
       with:
-        command: buildozer android debug
-        buildozer_version: stable
+        python-version: '3.10'
+
+    - name: Install Platform Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential libssl-dev zlib1g-dev libdb5.3-dev \
+          libexpat1-dev libffi-dev libgdbm-dev liblzma-dev libncurses5-dev \
+          libreadline-dev libsqlite3-dev libssl-dev libbz2-dev uuid-dev
+
+    - name: Install Buildozer and Cython
+      run: |
+        pip install --upgrade pip
+        pip install buildozer cython==0.29.33 kivy
+
+    - name: Build with Buildozer
+      run: |
+        buildozer android debug
+      env:
+        TERM: xterm
 
     - name: Upload APK Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: zr4xchess-apk
         path: bin/*.apk
